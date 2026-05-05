@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 style="margin-bottom:20px">Admin Dashboard</h2>
+
+<div class="stats">
+    <div class="stat-card">
+        <h2>{{ projects|length }}</h2>
+        <p>Total Projects</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ tasks|length }}</h2>
+        <p>Total Tasks</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ overdue|length }}</h2>
+        <p>Overdue Tasks</p>
+    </div>
+</div>
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+        <h3>Projects</h3>
+        <a href="{{ url_for('create_project') }}" class="btn btn-primary">+ New Project</a>
+    </div>
+    <table>
+        <tr><th>Name</th><th>Description</th><th>Tasks</th></tr>
+        {% for project in projects %}
+        <tr>
+            <td>{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td>{{ project.tasks|length }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+        <h3>All Tasks</h3>
+        <a href="{{ url_for('create_task') }}" class="btn btn-success">+ New Task</a>
+    </div>
+    <table>
+        <tr><th>Title</th><th>Assigned To</th><th>Status</th><th>Due Date</th></tr>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.assignee.username if task.assignee else 'Unassigned' }}</td>
+            <td><span class="badge badge-{{ task.status }}">{{ task.status }}</span></td>
+            <td>{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else 'No date' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom:15px">Members</h3>
+    <table>
+        <tr><th>Username</th><th>Email</th></tr>
+        {% for member in members %}
+        <tr>
+            <td>{{ member.username }}</td>
+            <td>{{ member.email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

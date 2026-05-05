@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 style="margin-bottom:20px">My Dashboard</h2>
+
+<div class="stats">
+    <div class="stat-card">
+        <h2>{{ tasks|length }}</h2>
+        <p>My Tasks</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ tasks|selectattr('status', 'equalto', 'completed')|list|length }}</h2>
+        <p>Completed</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ overdue|length }}</h2>
+        <p>Overdue</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom:15px">My Tasks</h3>
+    {% if tasks %}
+    <table>
+        <tr><th>Title</th><th>Project</th><th>Status</th><th>Due Date</th><th>Update</th></tr>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.project.name }}</td>
+            <td><span class="badge badge-{{ task.status }}">{{ task.status }}</span></td>
+            <td>{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else 'No date' }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('update_task', task_id=task.id) }}">
+                    <select name="status" style="padding:5px; margin:0">
+                        <option value="pending" {% if task.status=='pending' %}selected{% endif %}>Pending</option>
+                        <option value="in-progress" {% if task.status=='in-progress' %}selected{% endif %}>In Progress</option>
+                        <option value="completed" {% if task.status=='completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary" style="padding:5px 10px">Update</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p style="text-align:center; color:#888">No tasks assigned to you yet!</p>
+    {% endif %}
+</div>
+{% endblock %}

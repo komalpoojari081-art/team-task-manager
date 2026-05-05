@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto;">
+    <div class="card">
+        <h2 style="margin-bottom:20px">Create New Task</h2>
+        <form method="POST">
+            <label>Task Title</label>
+            <input type="text" name="title" required placeholder="Enter task title">
+            <label>Description</label>
+            <textarea name="description" rows="3" placeholder="Enter task description"></textarea>
+            <label>Project</label>
+            <select name="project_id" required>
+                <option value="">Select Project</option>
+                {% for project in projects %}
+                <option value="{{ project.id }}">{{ project.name }}</option>
+                {% endfor %}
+            </select>
+            <label>Assign To</label>
+            <select name="assigned_to" required>
+                <option value="">Select Member</option>
+                {% for member in members %}
+                <option value="{{ member.id }}">{{ member.username }}</option>
+                {% endfor %}
+            </select>
+            <label>Due Date</label>
+            <input type="date" name="due_date">
+            <button type="submit" class="btn btn-success" style="width:100%">Create Task</button>
+        </form>
+        <p style="text-align:center; margin-top:15px">
+            <a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
